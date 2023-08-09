@@ -20,10 +20,10 @@ const Accordian = (props) => {
             <span style={{width: '2.5rem', display: 'inline-block'}}>{item.id}</span>
             <span style={{width: '10rem', display: 'inline-block'}}>{item.title}</span>
             <span style={{width: '8rem', display: 'inline-block'}}>{item.author}</span>
-            <Link to={`/edit/${item.id}`}><FiEdit style={{width: '2rem', display: 'inline-block'}} /></Link>
-            <Link to={`/delete/${item.id}`}><RiDeleteBin6Line style={{width: '2rem', display: 'inline-block'}} /></Link>
-            {index === idx && <div style={{marginLeft: '2.5rem', color: 'black'}}>{item.content}
-                {item.image != null && <img src={`http://10.125.121.185:8080/display?fileName=${item.image}`} alt='게시글 이미지' style={{width: '25%'}}></img>}
+            <Link to={`/edit/${item.id}`}><FiEdit style={{width: '2rem', display: 'inline-block', color: '#3366ff'}} /></Link>
+            <Link to={`/delete/${item.id}`}><RiDeleteBin6Line style={{width: '2rem', display: 'inline-block', color: '#ff3366'}} /></Link>
+            {index === idx && <div style={{marginLeft: '2.5rem', color: 'black'}}><div>{item.content}</div>
+                {item.image != null && <img src={`${process.env.REACT_APP_BASEURL}/display?fileName=${item.image}`} alt='게시글 이미지' style={{maxWidth: '25%'}}></img>}
             </div>}
         </Div>
     );

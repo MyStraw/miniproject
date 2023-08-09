@@ -8,19 +8,24 @@ const Board = (props) => {
     const code = props.code;
     const [list, setList] = useState([]);
     useEffect(() => {
-        axios.get(`http://10.125.121.185:8080/board/list/${code}`).then((response) => {
+        axios.get(`${process.env.REACT_APP_BASEURL}/board/list/${code}`).then((response) => {
             setList(response.data);
         }).catch((error) => console.log(error));
     }, [code]);
     return (
         <>
-            <div className={style.vspace} style={{fontWeight: 'bold', marginBottom: '2%'}}>
+            <div className={style.vspace} style={{fontWeight: 'bold', marginBottom: '1%'}}>
                 게시판
-                {localStorage.getItem('userid') != null && <><span style={{marginRight: '14rem'}}></span>
+                {localStorage.getItem('userid') != null && <><span style={{marginRight: '18rem'}}></span>
                     <Link to={`/write/${code}`} style={{
-                        borderRadius: '0.4rem'
+                        textDecoration: 'none'
                     }}>글쓰기</Link>
                 </>}
+            </div>
+            <div style={{fontWeight: 'bold'}}>
+                <span style={{width: '2.5rem', display: 'inline-block'}}></span>
+                <span style={{width: '10rem', display: 'inline-block'}}>제목</span>
+                <span style={{width: '8rem', display: 'inline-block'}}>작성자</span>
             </div>
             <Accordian list={list} />
         </>

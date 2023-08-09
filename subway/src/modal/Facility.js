@@ -11,7 +11,7 @@ const Facility = (props) => {
         return avail ? 'O' : 'X';
     }
     useEffect(() => {
-        axios.get(`http://10.125.121.185:8080/facilities/${code}`).then(reponse => {
+        axios.get(`${process.env.REACT_APP_BASEURL}/facilities/${code}`).then(reponse => {
             const info = reponse.data[0];
             let names1 = ["외부 경사로", "시각장애인 유도로", "휠체어 리프트", "도시철도 경찰대", "비상 인터폰"];
             let names2 = ["외부 엘리베이터", "내부 엘리베이터", "에스컬레이터", "수유실", "만남의 광장"];

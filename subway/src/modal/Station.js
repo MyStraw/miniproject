@@ -24,7 +24,7 @@ const Station = (props) => {
     const [infotag, setInfo] = useState(<></>);
     const [show, toggle] = useState(false);
     useEffect(() => {
-        axios.get(`http://10.125.121.185:8080/station/${code}`).then(response => {
+        axios.get(`${process.env.REACT_APP_BASEURL}/station/${code}`).then(response => {
             const info = response.data[0];
             setInfo(<div style={{display: 'flex'}}>
                 <div style={{width: '45vmax'}}>

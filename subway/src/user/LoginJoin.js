@@ -30,7 +30,7 @@ const LoginJoin = () => {
     const goHome = () => navigate('/');
     const login = () => {
         const member = { username: userId, password: password };
-        axios.post('http://10.125.121.185:8080/login', member).then((response) => {
+        axios.post(`${process.env.REACT_APP_BASEURL}/login`, member).then((response) => {
             if (response.data.message === '로그인 성공') {
                 localStorage.setItem('userid', userId);
                 localStorage.setItem('accesstoken', response.headers.getAuthorization());
@@ -46,7 +46,7 @@ const LoginJoin = () => {
     }
     const register = () => {
         const member = { username: userId, password: password };
-        axios.post('http://10.125.121.185:8080/register', member).then((response) => {
+        axios.post(`${process.env.REACT_APP_BASEURL}/register`, member).then((response) => {
             alert(response.data);
         }).catch(() => alert('회원가입 실패'));
     }

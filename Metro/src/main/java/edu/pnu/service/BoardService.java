@@ -47,12 +47,12 @@ public class BoardService {
 		        try {
 		            file.transferTo(destination); // 파일 저장
 		            board.setImage(newFilename); // DB에 파일명만 저장, 로컬에 파일을 저장. 이미지 컨트롤러에 로컬에 저장된거 display 하는게 있다.
-		            board.setImagefile(file.getBytes());
+		            //board.setImagefile(file.getBytes());
 		        } catch (IOException e) {
 		            e.printStackTrace();
 		            // 에러 처리 로직 (예: 예외 던지기)
 		        }
-		    }		
+		    }
 		
 		return boardRepo.save(board);
 	}

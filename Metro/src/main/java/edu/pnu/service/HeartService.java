@@ -22,31 +22,30 @@ public class HeartService {
 
 	@Transactional
 	public void addLike(String loginId, Integer boardId) {
-		
-		 Optional<Board> optionalBoard = boardRepo.findById(boardId);
-		    if (!optionalBoard.isPresent()) {
-		        throw new IllegalArgumentException("Board not found with ID: " + boardId);
-		    }
-		    Board board = optionalBoard.get();
 
-		    Optional<Member> optionalMember = memberRepo.findByUsername(loginId);
-		    if (!optionalMember.isPresent()) {
-		        throw new IllegalArgumentException("Member not found with username: " + loginId);
-		    }
-		    Member loginUser = optionalMember.get();
+		Optional<Board> optionalBoard = boardRepo.findById(boardId);
+		if (!optionalBoard.isPresent()) {
+			throw new IllegalArgumentException("Board not found with ID: " + boardId);
+		}
+		Board board = optionalBoard.get();
 
-		    board.likeChange(board.getLikecount() + 1);
+		Optional<Member> optionalMember = memberRepo.findByUsername(loginId);
+		if (!optionalMember.isPresent()) {
+			throw new IllegalArgumentException("Member not found with username: " + loginId);
+		}
+		Member loginUser = optionalMember.get();
+
+		board.likeChange(board.getLikecount() + 1);
 		
-		
-		
-//		Board board = boardRepo.findById(boardId).get();
-//		Member loginUser = memberRepo.findByUsername(loginId).get();
-////		Member boardUser = board.getAuthor();
-////
-////		// 자신이 누른 좋아요가 아니라면
-////		if (!boardUser.equals(loginUser)) {
-////			boardUser.likeChange(boardUser.getReceivedLikeCnt() + 1);
-////		}
+//
+//		Board boards = boardRepo.findById(boardId).get();
+//		Member loginUsers = memberRepo.findByUsername(loginId).get();
+//		Member boardUsers = boards.getAuthor();
+//
+//		// 자신이 누른 좋아요가 아니라면
+//		if (!boardUsers.equals(loginUsers)) {
+//			boardUsers.likeChange(boardUsers.getReceivedLikeCnt() + 1);
+//		}
 //		board.likeChange(board.getLikecount() + 1);
 
 		heartRepo.save(Heart.builder().member(loginUser).board(board).build());
@@ -54,22 +53,22 @@ public class HeartService {
 
 	@Transactional
 	public void deleteLike(String loginId, Integer boardId) {
-		
-	    Optional<Board> optionalBoard = boardRepo.findById(boardId);
-	    if (!optionalBoard.isPresent()) {
-	        throw new IllegalArgumentException("Board not found with ID: " + boardId);
-	    }
-	    Board board = optionalBoard.get();
 
-	    Optional<Member> optionalMember = memberRepo.findByUsername(loginId);
-	    if (!optionalMember.isPresent()) {
-	        throw new IllegalArgumentException("Member not found with username: " + loginId);
-	    }
-	    Member loginUser = optionalMember.get();
+		Optional<Board> optionalBoard = boardRepo.findById(boardId);
+		if (!optionalBoard.isPresent()) {
+			throw new IllegalArgumentException("Board not found with ID: " + boardId);
+		}
+		Board board = optionalBoard.get();
 
-	    board.likeChange(board.getLikecount() - 1);
-	    heartRepo.deleteByMemberUsernameAndBoardId(loginId, boardId);		
-		
+		Optional<Member> optionalMember = memberRepo.findByUsername(loginId);
+		if (!optionalMember.isPresent()) {
+			throw new IllegalArgumentException("Member not found with username: " + loginId);
+		}
+		Member loginUser = optionalMember.get();
+
+		board.likeChange(board.getLikecount() - 1);
+		heartRepo.deleteByMemberUsernameAndBoardId(loginId, boardId);
+
 //		Board board = boardRepo.findById(boardId).get();
 //		Member loginUser = memberRepo.findByUsername(loginId).get();
 ////        Member boardUser = board.getAuthor();

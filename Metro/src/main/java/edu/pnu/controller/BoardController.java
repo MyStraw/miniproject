@@ -22,54 +22,58 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.pnu.domain.Board;
 import edu.pnu.service.BoardService;
+import jakarta.annotation.security.RolesAllowed;
 
 @RestController
 @RequestMapping("/board")
 public class BoardController {
 
-    @Autowired
-    private BoardService boardService; 
-    
-  //  @PostMapping("/create/{stationcode}")
-    // 이미지랑 같이 보내려면 multipart/form-data를 써야한다. 프론트에서도.
-    // 리퀘스트바디랑 리퀘스트파람 같이 쓰는건 안좋다.
-    // @RequestBody는 요청의 본문 전체를 읽어서 해당 객체로 변환하는데, 이미 @RequestParam으로 멀티파트 요청을 읽었다면 본문은 이미 읽혀진 상태로 인식될 수 있습니다.
-    // 지금 이미지랑 글이랑 둘다 동시에 보낼때 쓰는방법이다. 이거랑 properties에서 spring.servlet.multipart.enabled = true 이것도 해줘야한다.
-  @PostMapping(value = "/create/{stationcode}", consumes = "multipart/form-data")
-    public Board create(@PathVariable int stationcode, @RequestHeader("Authorization") String authorizationHeader, @RequestParam(value = "image", required = false) MultipartFile image, @RequestParam("board") String boardStr) throws JsonMappingException, JsonProcessingException { //Board board가 이미 받아온 json이다. Board 타입의 board 객체. 
-    	//Requestbody가 client에서 보내온 json 정보이다. 
-	  
-	  	ObjectMapper mapper = new ObjectMapper();
-	    Board board = mapper.readValue(boardStr, Board.class);
-        return boardService.create(stationcode, authorizationHeader, board, image);
-    }
+	@Autowired
+	private BoardService boardService;
 
-    @GetMapping("/list")
-    public List<Board> list() {
-        return boardService.list();
-    }
-    
-    @GetMapping("/list/{stationcode}")
-    public List<Board> listStationCode(@PathVariable int stationcode){
-    	return boardService.listStationCode(stationcode);
-    }    
-    
-    @GetMapping("/find/{id}")
-    public Optional<Board> find(@PathVariable Integer id){
-    	return boardService.find(id);
-    }   
-    
+	// @PostMapping("/create/{stationcode}")
+	// 이미지랑 같이 보내려면 multipart/form-data를 써야한다. 프론트에서도.
+	// 리퀘스트바디랑 리퀘스트파람 같이 쓰는건 안좋다.
+	// @RequestBody는 요청의 본문 전체를 읽어서 해당 객체로 변환하는데, 이미 @RequestParam으로 멀티파트 요청을 읽었다면
+	// 본문은 이미 읽혀진 상태로 인식될 수 있습니다.
+	// 지금 이미지랑 글이랑 둘다 동시에 보낼때 쓰는방법이다. 이거랑 properties에서
+	// spring.servlet.multipart.enabled = true 이것도 해줘야한다.
+	
+	
+	
+	@PostMapping(value = "/create/{stationcode}", consumes = "multipart/form-data")	
+	public Board create(@PathVariable int stationcode, 
+			@RequestHeader("Authorization") String authorizationHeader,
+			@RequestParam(value = "image", required = false) MultipartFile image,
+			@RequestParam("board") String boardStr) throws JsonMappingException, JsonProcessingException {
+		ObjectMapper mapper = new ObjectMapper();
+		Board board = mapper.readValue(boardStr, Board.class);
+		return boardService.create(stationcode, authorizationHeader, board, image);
+	}
 
-    @PutMapping("/update/{id}")
-    public Board update(@PathVariable Integer id, @RequestBody Board board) {
-        return boardService.update(id, board);
-    }
+	@GetMapping("/list")
+	public List<Board> list() {
+		return boardService.list();
+	}
 
-    @DeleteMapping("/delete/{id}")
-    public String delete(@PathVariable Integer id) {
-        boardService.delete(id);
-        return "게시글 삭제 성공";
-    }
+	@GetMapping("/list/{stationcode}")
+	public List<Board> listStationCode(@PathVariable int stationcode) {
+		return boardService.listStationCode(stationcode);
+	}
+
+	@GetMapping("/find/{id}")
+	public Optional<Board> find(@PathVariable Integer id) {
+		return boardService.find(id);
+	}
+	 //Board board. Board 타입의 객체 board : 이게 받아온 json 객체. 리퀘스트바디 : 클라이언트의 요청. 즉 클라이언트가 보낸게 board
+	@PutMapping("/update/{id}")
+	public Board update(@PathVariable Integer id, @RequestBody Board board) {
+		return boardService.update(id, board);
+	}
+		
+	@DeleteMapping("/delete/{id}")
+	public String delete(@PathVariable Integer id) {
+		boardService.delete(id);
+		return "게시글 삭제 성공";
+	}
 }
-
-

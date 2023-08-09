@@ -1,5 +1,6 @@
 package edu.pnu.service;
 
+import java.util.Date;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,12 +25,12 @@ public class MemberService {
 			member.setPassword(passwordEncoder.encode(member.getPassword()));
 			member.setRole("ROLE_MEMBER"); // 기본 역할 설정
 			member.setEnabled(true);
+			member.setDate(new Date());
 			return memberRepo.save(member);
 		}
 		else {
 			return null;
-		}
-		
+		}		
 	}
 
 	private Object getMember(Member member) {

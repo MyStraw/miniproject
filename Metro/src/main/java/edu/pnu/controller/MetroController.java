@@ -31,7 +31,7 @@ public class MetroController {
 	@Autowired
 	TimesRepository timesRepo;
 
-//    @CrossOrigin(origins = "http://localhost:3000")
+//  @CrossOrigin(origins = "http://localhost:3000") 이거 한개만 연결 허용해줄라면. 이거 대신 cors 썼지.
 	@GetMapping("/station/{stationcode}")
 	public List<Station> getStation(@PathVariable int stationcode) {
 		return stationRepo.findBystationcode(stationcode);

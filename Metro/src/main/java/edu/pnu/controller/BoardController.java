@@ -1,9 +1,11 @@
 package edu.pnu.controller;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,7 +24,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.pnu.domain.Board;
 import edu.pnu.service.BoardService;
-import jakarta.annotation.security.RolesAllowed;
+import edu.pnu.service.LikeService;
 
 @RestController
 @RequestMapping("/board")
@@ -30,6 +32,10 @@ public class BoardController {
 
 	@Autowired
 	private BoardService boardService;
+	
+	@Autowired
+	private LikeService likeService;
+	
 
 	// @PostMapping("/create/{stationcode}")
 	// 이미지랑 같이 보내려면 multipart/form-data를 써야한다. 프론트에서도.
@@ -76,4 +82,13 @@ public class BoardController {
 		boardService.delete(id);
 		return "게시글 삭제 성공";
 	}
+	
+	//------------------좋아요 부분--------------------//
+	
+	@PostMapping("{boardId}/like")
+	public ResponseEntity<Void> toggleLike(@PathVariable Integer boardId, Principal principal){
+		likeService.toggleLike(principal.getName(), boardId);
+		return ResponseEntity.ok().build();
+	}
+	
 }

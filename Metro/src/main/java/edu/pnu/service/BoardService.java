@@ -37,7 +37,7 @@ public class BoardService {
 				.asString();		
 		board.setAuthor(username);		
 		board.setStationcode(stationcode);
-		board.setLikecount(0);
+		
 		
 		 if (file != null && !file.isEmpty()) {
 		        String originalFilename = file.getOriginalFilename();

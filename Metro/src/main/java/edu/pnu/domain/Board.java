@@ -1,15 +1,16 @@
 package edu.pnu.domain;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -37,24 +38,46 @@ public class Board {
 	private Integer id;
 	private String title;
 	private String content;
-	
-//	@ManyToOne(fetch = FetchType.LAZY)
-//	@JoinColumn(name = "member_username")
+
+//	@ManyToOne
+//	@JoinColumn(name = "author")
+//	private Member member;
 	private String author;
 
 	@Column(name = "station_code")
 	private Integer stationcode;
 
-	@OneToMany(mappedBy = "board", orphanRemoval = true)
-	private List<Heart> likes;
-	@Column(name = "like_count")
-	private Integer likecount;	
-	private String image;
-	
-	@Lob
-	private byte[] imagefile;
-	public void likeChange(Integer likecount) {
-		this.likecount = likecount;
+	@JsonBackReference
+	@OneToMany(mappedBy = "board")
+	private List<Like> likes = new ArrayList<>();
+
+	@Column(name = "likes_count")
+	private Integer likesCount = 0;
+
+	private String image;	
+
+	public void addLike() {
+		 if (likesCount == null) {
+		        likesCount = 0;
+		    }
+		this.likesCount += 1;
 	}
+
+	public void removeLike() {
+		this.likesCount -= 1;
+	}
+
+
+	
+//	@Lob
+//	private byte[] imagefile;
+
+//	@OneToMany(mappedBy = "board", orphanRemoval = true)
+//	private List<Heart> likes;
+//	@Column(name = "like_count")
+//	private Integer likecount;	
+//	public void likeChange(Integer likecount) {
+//		this.likecount = likecount;
+//	}
 
 }

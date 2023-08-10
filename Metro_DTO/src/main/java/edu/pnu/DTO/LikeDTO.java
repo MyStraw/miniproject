@@ -11,10 +11,8 @@ import lombok.Setter;
 @AllArgsConstructor
 public class LikeDTO {
 
-	private Long id;
-	private String memberName; // Member의 username
-	private Long boardId; // Board의 id
-
-	// 생성자, getter, setter ...
+	private Integer id;
+	private String memberUsername; // Member의 username만 가지고 있음
+	private Integer boardId; // Board의 ID만 가지고 있음
 
 }

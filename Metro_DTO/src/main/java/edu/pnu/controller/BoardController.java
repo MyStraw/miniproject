@@ -3,6 +3,7 @@ package edu.pnu.controller;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import edu.pnu.DTO.BoardDTO;
+import edu.pnu.DTO.MapperUtil;
 import edu.pnu.domain.Board;
 import edu.pnu.domain.Member;
 import edu.pnu.persistence.BoardRepository;
@@ -38,12 +41,15 @@ public class BoardController {
 
 	@Autowired
 	private LikeService likeService;
-	
+
 	@Autowired
 	private MemberRepository memberRepo;
-	
+
 	@Autowired
 	private BoardRepository boardRepo;
+
+	@Autowired
+	private MapperUtil mapperUtil;
 
 	// @PostMapping("/create/{stationcode}")
 	// 이미지랑 같이 보내려면 multipart/form-data를 써야한다. 프론트에서도.
@@ -53,35 +59,65 @@ public class BoardController {
 	// 지금 이미지랑 글이랑 둘다 동시에 보낼때 쓰는방법이다. 이거랑 properties에서
 	// spring.servlet.multipart.enabled = true 이것도 해줘야한다.
 
+//	@PostMapping(value = "/create/{stationcode}", consumes = "multipart/form-data")
+//	public Board create(@PathVariable int stationcode, @RequestHeader("Authorization") String authorizationHeader,
+//			@RequestParam(value = "image", required = false) MultipartFile image,
+//			@RequestParam("board") String boardStr) throws JsonMappingException, JsonProcessingException {
+//		ObjectMapper mapper = new ObjectMapper();
+//		Board board = mapper.readValue(boardStr, Board.class);
+//		return boardService.create(stationcode, authorizationHeader, board, image);
+//	}
+
 	@PostMapping(value = "/create/{stationcode}", consumes = "multipart/form-data")
-	public Board create(@PathVariable int stationcode, @RequestHeader("Authorization") String authorizationHeader,
+	public BoardDTO create(@PathVariable int stationcode, @RequestHeader("Authorization") String authorizationHeader,
 			@RequestParam(value = "image", required = false) MultipartFile image,
 			@RequestParam("board") String boardStr) throws JsonMappingException, JsonProcessingException {
 		ObjectMapper mapper = new ObjectMapper();
-		Board board = mapper.readValue(boardStr, Board.class);
-		return boardService.create(stationcode, authorizationHeader, board, image);
+		BoardDTO boardDto = mapper.readValue(boardStr, BoardDTO.class);
+		return boardService.create(stationcode, authorizationHeader, boardDto, image);
 	}
 
+//	@GetMapping("/list")
+//	public List<Board> list() {
+//		return boardService.list();
+//	}
+
 	@GetMapping("/list")
-	public List<Board> list() {
+	public List<BoardDTO> list() {
 		return boardService.list();
 	}
 
+//	@GetMapping("/list/{stationcode}")
+//	public List<Board> listStationCode(@PathVariable int stationcode) {
+//		return boardService.listStationCode(stationcode);
+//	}
+
 	@GetMapping("/list/{stationcode}")
-	public List<Board> listStationCode(@PathVariable int stationcode) {
+	public List<BoardDTO> listStationCode(@PathVariable int stationcode) {
 		return boardService.listStationCode(stationcode);
 	}
 
+//
+//	@GetMapping("/find/{id}")
+//	public Optional<Board> find(@PathVariable Integer id) {
+//		return boardService.find(id);
+//	}
+//
 	@GetMapping("/find/{id}")
-	public Optional<Board> find(@PathVariable Integer id) {
+	public BoardDTO find(@PathVariable Integer id) {
 		return boardService.find(id);
 	}
 
-	// Board board. Board 타입의 객체 board : 이게 받아온 json 객체. 리퀘스트바디 : 클라이언트의 요청. 즉
-	// 클라이언트가 보낸게 board
+//	// Board board. Board 타입의 객체 board : 이게 받아온 json 객체. 리퀘스트바디 : 클라이언트의 요청. 즉
+//	// 클라이언트가 보낸게 board
+//	@PutMapping("/update/{id}")
+//	public Board update(@PathVariable Integer id, @RequestBody Board board) {
+//		return boardService.update(id, board);
+//	}
+
 	@PutMapping("/update/{id}")
-	public Board update(@PathVariable Integer id, @RequestBody Board board) {
-		return boardService.update(id, board);
+	public BoardDTO update(@PathVariable Integer id, @RequestBody BoardDTO boardDto) {
+		return boardService.update(id, boardDto);
 	}
 
 	@DeleteMapping("/delete/{id}")
@@ -100,39 +136,48 @@ public class BoardController {
 
 	@GetMapping("{id}/checkliked")
 	public ResponseEntity<Boolean> hasUserLikedTheBoard(@PathVariable Integer id, Principal principal) {
-	    // 현재 로그인한 사용자 정보를 가져옵니다.
-	    Optional<Member> optionalMember = memberRepo.findByUsername(principal.getName());
-	    if (!optionalMember.isPresent()) {
-	        // 에러 처리 로직 (예: 예외 던지기)
-	    }
-	    Member currentMember = optionalMember.get();
-	    // 조회할 게시물을 가져옵니다.
-	    Board targetBoard = boardService.find(id).orElse(null);
-	    
-	    if (targetBoard == null) {
-	        return ResponseEntity.notFound().build(); // 게시물이 없을 경우 404 응답
-	    }
-	    
-	    boolean hasLiked = boardService.hasUserLikedTheBoard(currentMember, targetBoard);
-	    return ResponseEntity.ok(hasLiked); // 사용자가 게시물에 좋아요를 눌렀는지 안 눌렀는지를 반환합니다.
-	}
-	
-	@GetMapping("/myboards")
-	public ResponseEntity<List<Board>> getMyBoards(Principal principal) {
-	    String username = principal.getName();
-	    List<Board> myBoards = boardRepo.findByAuthor(username);
-	    return ResponseEntity.ok(myBoards);
+		// 현재 로그인한 사용자 정보를 가져옵니다.
+		Optional<Member> optionalMember = memberRepo.findByUsername(principal.getName());
+		if (!optionalMember.isPresent()) {
+			// 에러 처리 로직 (예: 예외 던지기)
+		}
+		Member currentMember = optionalMember.get();
+		// 조회할 게시물을 가져옵니다.
+		 BoardDTO targetBoardDTO = boardService.find(id);
+
+		if (targetBoardDTO  == null) {
+			return ResponseEntity.notFound().build(); // 게시물이 없을 경우 404 응답
+		}
+		
+		Board targetBoard = mapperUtil.convertToEntity(targetBoardDTO, Board.class);  
+
+		boolean hasLiked = boardService.hasUserLikedTheBoard(currentMember, targetBoard);
+		return ResponseEntity.ok(hasLiked); // 사용자가 게시물에 좋아요를 눌렀는지 안 눌렀는지를 반환합니다.
 	}
 
+	@GetMapping("/myboards")
+	public ResponseEntity<List<BoardDTO>> getMyBoards(Principal principal) {
+	    String username = principal.getName();
+	    List<Board> myBoards = boardRepo.findByAuthor(username);
+	    List<BoardDTO> myBoardDTOs = myBoards.stream()
+	            .map(board -> mapperUtil.convertToDTO(board, BoardDTO.class))
+	            .collect(Collectors.toList());
+	    return ResponseEntity.ok(myBoardDTOs);
+	}
+
+	
 	@GetMapping("/mylikedboards")
-	public ResponseEntity<List<Board>> getMyLikedBoards(Principal principal) {
+	public ResponseEntity<List<BoardDTO>> getMyLikedBoards(Principal principal) {
 	    String username = principal.getName();
 	    Member currentMember = memberRepo.findByUsername(username).orElse(null);
 	    if (currentMember == null) {
 	        return ResponseEntity.notFound().build();
 	    }
 	    List<Board> likedBoards = boardRepo.findAllByLikes_Member(currentMember);
-	    return ResponseEntity.ok(likedBoards);
+	    List<BoardDTO> likedBoardDTOs = likedBoards.stream()
+	            .map(board -> mapperUtil.convertToDTO(board, BoardDTO.class))
+	            .collect(Collectors.toList());
+	    return ResponseEntity.ok(likedBoardDTOs);
 	}
 
 }

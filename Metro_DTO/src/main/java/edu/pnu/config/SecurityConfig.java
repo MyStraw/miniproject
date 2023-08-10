@@ -2,6 +2,7 @@ package edu.pnu.config;
 
 import java.util.Arrays;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,6 +28,12 @@ public class SecurityConfig {
 	public PasswordEncoder passwordEncoder() { //비번 암호화 및 비교 인터페이스.
 		return new BCryptPasswordEncoder();
 	}
+	
+	 @Bean
+	    public ModelMapper modelMapper() {
+	        return new ModelMapper();
+	    }
+	
 
 	@Bean // 0807 추가. 프론트에서 로그인. CORS 설정위한 메소드. 다른 도메인의 요청 허용을 사용자가 설정.
 	public CorsConfigurationSource corsConfigurationSource() {

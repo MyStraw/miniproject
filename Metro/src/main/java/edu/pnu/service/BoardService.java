@@ -15,12 +15,18 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 
 import edu.pnu.domain.Board;
+import edu.pnu.domain.Like;
+import edu.pnu.domain.Member;
 import edu.pnu.persistence.BoardRepository;
+import edu.pnu.persistence.LikeRepository;
 @Service
 public class BoardService {
 	
 	@Autowired
 	private BoardRepository boardRepo;
+	
+	@Autowired
+	private LikeRepository likeRepo;
 	
 	 
 	public List<Board> list() {		
@@ -71,4 +77,11 @@ public class BoardService {
 	public Optional<Board> find(Integer id) {		
 		return boardRepo.findById(id);
 	}
+	
+
+	public boolean hasUserLikedTheBoard(Member member, Board board) {
+	    Like like = likeRepo.findByMemberAndBoard(member, board);
+	    return like != null;
+	}
+	
 }

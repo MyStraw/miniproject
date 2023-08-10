@@ -23,6 +23,9 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.pnu.domain.Board;
+import edu.pnu.domain.Member;
+import edu.pnu.persistence.BoardRepository;
+import edu.pnu.persistence.MemberRepository;
 import edu.pnu.service.BoardService;
 import edu.pnu.service.LikeService;
 
@@ -32,10 +35,15 @@ public class BoardController {
 
 	@Autowired
 	private BoardService boardService;
-	
+
 	@Autowired
 	private LikeService likeService;
 	
+	@Autowired
+	private MemberRepository memberRepo;
+	
+	@Autowired
+	private BoardRepository boardRepo;
 
 	// @PostMapping("/create/{stationcode}")
 	// 이미지랑 같이 보내려면 multipart/form-data를 써야한다. 프론트에서도.
@@ -44,12 +52,9 @@ public class BoardController {
 	// 본문은 이미 읽혀진 상태로 인식될 수 있습니다.
 	// 지금 이미지랑 글이랑 둘다 동시에 보낼때 쓰는방법이다. 이거랑 properties에서
 	// spring.servlet.multipart.enabled = true 이것도 해줘야한다.
-	
-	
-	
-	@PostMapping(value = "/create/{stationcode}", consumes = "multipart/form-data")	
-	public Board create(@PathVariable int stationcode, 
-			@RequestHeader("Authorization") String authorizationHeader,
+
+	@PostMapping(value = "/create/{stationcode}", consumes = "multipart/form-data")
+	public Board create(@PathVariable int stationcode, @RequestHeader("Authorization") String authorizationHeader,
 			@RequestParam(value = "image", required = false) MultipartFile image,
 			@RequestParam("board") String boardStr) throws JsonMappingException, JsonProcessingException {
 		ObjectMapper mapper = new ObjectMapper();
@@ -71,24 +76,63 @@ public class BoardController {
 	public Optional<Board> find(@PathVariable Integer id) {
 		return boardService.find(id);
 	}
-	 //Board board. Board 타입의 객체 board : 이게 받아온 json 객체. 리퀘스트바디 : 클라이언트의 요청. 즉 클라이언트가 보낸게 board
+
+	// Board board. Board 타입의 객체 board : 이게 받아온 json 객체. 리퀘스트바디 : 클라이언트의 요청. 즉
+	// 클라이언트가 보낸게 board
 	@PutMapping("/update/{id}")
 	public Board update(@PathVariable Integer id, @RequestBody Board board) {
 		return boardService.update(id, board);
 	}
-		
+
 	@DeleteMapping("/delete/{id}")
 	public String delete(@PathVariable Integer id) {
 		boardService.delete(id);
 		return "게시글 삭제 성공";
 	}
-	
-	//------------------좋아요 부분--------------------//
-	
+
+	// ------------------좋아요 부분--------------------//
+
 	@PostMapping("{boardId}/like")
-	public ResponseEntity<Void> toggleLike(@PathVariable Integer boardId, Principal principal){
+	public ResponseEntity<Void> toggleLike(@PathVariable Integer boardId, Principal principal) {
 		likeService.toggleLike(principal.getName(), boardId);
 		return ResponseEntity.ok().build();
 	}
+
+	@GetMapping("{boardId}/checkliked")
+	public ResponseEntity<Boolean> hasUserLikedTheBoard(@PathVariable Integer boardId, Principal principal) {
+	    // 현재 로그인한 사용자 정보를 가져옵니다.
+	    Optional<Member> optionalMember = memberRepo.findByUsername(principal.getName());
+	    if (!optionalMember.isPresent()) {
+	        // 에러 처리 로직 (예: 예외 던지기)
+	    }
+	    Member currentMember = optionalMember.get();
+	    // 조회할 게시물을 가져옵니다.
+	    Board targetBoard = boardService.find(boardId).orElse(null);
+	    
+	    if (targetBoard == null) {
+	        return ResponseEntity.notFound().build(); // 게시물이 없을 경우 404 응답
+	    }
+	    
+	    boolean hasLiked = boardService.hasUserLikedTheBoard(currentMember, targetBoard);
+	    return ResponseEntity.ok(hasLiked); // 사용자가 게시물에 좋아요를 눌렀는지 안 눌렀는지를 반환합니다.
+	}
 	
+	@GetMapping("/myboards")
+	public ResponseEntity<List<Board>> getMyBoards(Principal principal) {
+	    String username = principal.getName();
+	    List<Board> myBoards = boardRepo.findByAuthor(username);
+	    return ResponseEntity.ok(myBoards);
+	}
+
+	@GetMapping("/mylikedboards")
+	public ResponseEntity<List<Board>> getMyLikedBoards(Principal principal) {
+	    String username = principal.getName();
+	    Member currentMember = memberRepo.findByUsername(username).orElse(null);
+	    if (currentMember == null) {
+	        return ResponseEntity.notFound().build();
+	    }
+	    List<Board> likedBoards = boardRepo.findAllByLikes_Member(currentMember);
+	    return ResponseEntity.ok(likedBoards);
+	}
+
 }

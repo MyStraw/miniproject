@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import edu.pnu.domain.Board;
+import edu.pnu.domain.Member;
 
 public interface BoardRepository extends JpaRepository<Board, Integer> {
 	
@@ -14,4 +15,8 @@ public interface BoardRepository extends JpaRepository<Board, Integer> {
 //	+ "from Board board "
 //	+ "where board.station_code = :stationcode ")
 	List<Board> findBystationcode(int stationcode);
+
+	List<Board> findByAuthor(String username);
+
+	List<Board> findAllByLikes_Member(Member currentMember);
 }

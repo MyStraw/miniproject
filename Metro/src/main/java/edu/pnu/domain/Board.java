@@ -54,12 +54,12 @@ public class Board {
 	@Column(name = "likes_count")
 	private Integer likesCount = 0;
 
-	private String image;	
+	private String image;
 
 	public void addLike() {
-		 if (likesCount == null) {
-		        likesCount = 0;
-		    }
+		if (likesCount == null) {
+			likesCount = 0;
+		}
 		this.likesCount += 1;
 	}
 
@@ -68,7 +68,8 @@ public class Board {
 	}
 
 
-	
+
+
 //	@Lob
 //	private byte[] imagefile;
 

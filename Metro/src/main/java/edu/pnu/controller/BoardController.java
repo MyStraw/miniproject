@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -61,7 +62,7 @@ public class BoardController {
 		Board board = mapper.readValue(boardStr, Board.class);
 		return boardService.create(stationcode, authorizationHeader, board, image);
 	}
-
+	
 	@GetMapping("/list")
 	public List<Board> list() {
 		return boardService.list();
@@ -79,11 +80,12 @@ public class BoardController {
 
 	// Board board. Board 타입의 객체 board : 이게 받아온 json 객체. 리퀘스트바디 : 클라이언트의 요청. 즉
 	// 클라이언트가 보낸게 board
+	
 	@PutMapping("/update/{id}")
 	public Board update(@PathVariable Integer id, @RequestBody Board board) {
 		return boardService.update(id, board);
 	}
-
+	
 	@DeleteMapping("/delete/{id}")
 	public String delete(@PathVariable Integer id) {
 		boardService.delete(id);
@@ -92,7 +94,7 @@ public class BoardController {
 
 	// ------------------좋아요 부분--------------------//
 
-	@PostMapping("{id}/like")
+	@GetMapping("{id}/like")
 	public ResponseEntity<Void> toggleLike(@PathVariable Integer id, Principal principal) {
 		likeService.toggleLike(principal.getName(), id);
 		return ResponseEntity.ok().build();
@@ -131,7 +133,7 @@ public class BoardController {
 	    if (currentMember == null) {
 	        return ResponseEntity.notFound().build();
 	    }
-	    List<Board> likedBoards = boardRepo.findAllByLikes_Member(currentMember);
+	    List<Board> likedBoards = boardRepo.findAllByLikes_MemberOrderByLikes_BoardId(currentMember);
 	    return ResponseEntity.ok(likedBoards);
 	}
 

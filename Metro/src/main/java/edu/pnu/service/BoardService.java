@@ -34,7 +34,7 @@ public class BoardService {
 	}	
 	
 	public List<Board> listStationCode(int stationcode){
-		return boardRepo.findBystationcode(stationcode);		
+		return boardRepo.findBystationcodeOrderByLikesCountDesc(stationcode);		
 	}		
 	
 	public Board create(int stationcode, String authorizationHeader, Board board,  MultipartFile file) {	

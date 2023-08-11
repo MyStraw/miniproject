@@ -80,7 +80,7 @@ public class SecurityConfig {
 			security.requestMatchers("/board/create/**").authenticated() //인증 통과만 하면 쓸수있음. 즉 로그인 한 사람만 이 URL 사용가능.
 			.requestMatchers("/board/update/**").hasAnyRole("MANAGER", "ADMIN")			
 			.requestMatchers("/board/delete/**").hasRole("ADMIN")
-			.requestMatchers("/board/{boardId}/like").authenticated()
+			.requestMatchers("/board/{id}/like").authenticated()
 			.anyRequest().permitAll(); //위에 명시하지 않은, 인증도 안되고 롤도 없는 애들 전부. 이 URL 빼고 다 허용.
 		});
 

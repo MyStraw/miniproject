@@ -28,7 +28,7 @@ const Main = () => {
     useEffect(() => {
         setUser(localStorage.getItem('userid'));
     }, []);
-    const info = <span className={style.info}>{userid}님 <Button onClick={logout}>로그아웃</Button></span>;
+    const info = <span className={style.info}><Link to={`/my`} style={{marginRight: '0.4rem'}}>{userid}님</Link> <Button onClick={logout}>로그아웃</Button></span>;
     return (
         <main>
             <Helmet><title>부산 지하철 정보</title></Helmet>

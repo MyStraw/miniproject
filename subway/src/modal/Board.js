@@ -17,9 +17,7 @@ const Board = (props) => {
             <div className={style.vspace} style={{fontWeight: 'bold', marginBottom: '1%'}}>
                 게시판
                 {localStorage.getItem('userid') != null && <><span style={{marginRight: '18rem'}}></span>
-                    <Link to={`/write/${code}`} style={{
-                        textDecoration: 'none'
-                    }}>글쓰기</Link>
+                    <Link to={`/write/${code}`}>글쓰기</Link>
                 </>}
             </div>
             <div style={{fontWeight: 'bold'}}>

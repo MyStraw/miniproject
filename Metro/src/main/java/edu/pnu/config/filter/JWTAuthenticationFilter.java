@@ -2,12 +2,15 @@ package edu.pnu.config.filter;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -65,7 +68,14 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		User user = (User) authResult.getPrincipal();
 		log.info("successfulAuthentication:" + user.toString());
 
+		List<String> roles = user.getAuthorities()
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList());
+		
+		
 		String jwtToken = JWT.create().withClaim("username", user.getUsername())
+				 .withClaim("roles",roles)
 				.withExpiresAt(new Date(System.currentTimeMillis() + 1000 * 60 * 30))
 				.sign(Algorithm.HMAC256("edu.pnu.jwtkey"));
 		
@@ -74,8 +84,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		response.addHeader("Authorization", "Bearer " + jwtToken);
 		response.setContentType("application/json");
 		response.setCharacterEncoding("UTF-8");
-		response.getWriter().write("{\"message\":\"로그인 성공\"}");
-		// ,\"token\":\"" + jwtToken + "\"
+		response.getWriter().write("{\"message\":\"로그인 성공\"}");		
 		response.getWriter().flush(); // 출력 스트림 플러시
 		response.getWriter().close(); // 출력 스트림 종료
 //		chain.doFilter(request, response);

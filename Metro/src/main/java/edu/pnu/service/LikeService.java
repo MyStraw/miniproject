@@ -40,6 +40,4 @@ public class LikeService {
 			likeRepo.save(newLike);
 		}
 	}
-	
-
 }

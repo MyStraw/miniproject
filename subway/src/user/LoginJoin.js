@@ -23,6 +23,26 @@ const Button = styled.button`
     }
 `;
 
+const parseJWT = (token) => {
+    try {
+        // 토큰을 점(.)을 기준으로 나누어 페이로드 부분만 추출
+        const payload = token.split('.')[1];
+        
+        // Base64Url 포맷을 Base64 포맷으로 변환
+        const base64 = payload.replace('-', '+').replace('_', '/');
+        
+        // Base64 포맷의 페이로드를 디코딩
+        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+
+        return JSON.parse(jsonPayload);
+    } catch (e) {
+        console.error("토큰 파싱 중 오류 발생:", e);
+        return null;
+    }
+}
+
 const LoginJoin = () => {
     const [userId, setUserId] = useState('');
     const [password, setPassword] = useState('');
@@ -32,8 +52,13 @@ const LoginJoin = () => {
         const member = { username: userId, password: password };
         axios.post(`${process.env.REACT_APP_BASEURL}/login`, member).then((response) => {
             if (response.data.message === '로그인 성공') {
-                localStorage.setItem('userid', userId);
-                localStorage.setItem('accesstoken', response.headers.getAuthorization());
+                const accessToken = response.headers.getAuthorization();
+                const parsedToken = parseJWT(accessToken);
+                if (parsedToken) {
+                    localStorage.setItem('userid', parsedToken.username);
+                    localStorage.setItem('roles', JSON.stringify(parsedToken.roles));
+                    localStorage.setItem('accesstoken', accessToken);
+                }
                 goHome();
             } else {
                 alert('로그인 실패');

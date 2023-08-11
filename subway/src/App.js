@@ -5,6 +5,7 @@ import LoginJoin from './user/LoginJoin'
 import Write from './user/Write';
 import Edit from './user/Edit';
 import Delete from './user/Delete';
+import MyContent from './user/MyContent';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <Route path='/write/:code' element={<Write />} />
           <Route path='/edit/:id' element={<Edit />} />
           <Route path='/delete/:id' element={<Delete />} />
+          <Route path='/my' element={<MyContent />} />
       </Routes>
     </BrowserRouter>
   )

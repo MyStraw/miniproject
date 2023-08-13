@@ -65,6 +65,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	@Override //인증 성공시 호출되는 메서드. 성공후 JWT 토큰생성하고 응답헤더에 추가.
 	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
 			Authentication authResult) throws IOException, ServletException {
+		//위에서 로그인 성공했을때 auth가 리턴 됐잖아? 그게 authResult이다.
 		User user = (User) authResult.getPrincipal();
 		log.info("successfulAuthentication:" + user.toString());
 
@@ -75,13 +76,14 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		
 		
 		String jwtToken = JWT.create().withClaim("username", user.getUsername())
-				 .withClaim("roles",roles)
-				.withExpiresAt(new Date(System.currentTimeMillis() + 1000 * 60 * 30))
-				.sign(Algorithm.HMAC256("edu.pnu.jwtkey"));
+				 .withClaim("roles",roles) //클레임들이 다 페이로드 부분에 들어간다.
+				.withExpiresAt(new Date(System.currentTimeMillis() + 1000 * 60 * 30)) //페이로드에 들어가는 정보.
+				.sign(Algorithm.HMAC256("edu.pnu.jwtkey")); //서명에 암호화 알고리즘 정보 포함.
 		
 		
-
-		response.addHeader("Authorization", "Bearer " + jwtToken);
+		//HTTP 헤더에 JWT 토큰을 넣는것이다. 서버가 클라이언트에 보내는 정보들.
+		//HTTP 요청에는 헤더와 바디가 있다. 바디에는 본문이 들어간다. 헤더에 쿠키나 토큰이 들어간다.
+		response.addHeader("Authorization", "Bearer " + jwtToken); //이건 HTTP 응답헤더에 추가되는거. JWT 토큰 헤더와 상관없다.
 		response.setContentType("application/json");
 		response.setCharacterEncoding("UTF-8");
 		response.getWriter().write("{\"message\":\"로그인 성공\"}");		

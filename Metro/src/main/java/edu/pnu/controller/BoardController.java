@@ -54,12 +54,46 @@ public class BoardController {
 	// 지금 이미지랑 글이랑 둘다 동시에 보낼때 쓰는방법이다. 이거랑 properties에서
 	// spring.servlet.multipart.enabled = true 이것도 해줘야한다.
 
+	
+	
+	
+//	@PostMapping(value = "/create/{stationcode}", consumes = "multipart/form-data")
+//	public ResponseEntity<?> create(@PathVariable int stationcode, @RequestHeader("Authorization") String authorizationHeader,
+//			@RequestParam(value = "image", required = false) MultipartFile image,
+//			@RequestParam("board") String boardStr) throws JsonMappingException, JsonProcessingException {
+//		ObjectMapper mapper = new ObjectMapper();
+//		Board board = mapper.readValue(boardStr, Board.class);
+//		Board createdBoard = boardService.create(stationcode, authorizationHeader, board, image);
+//		
+//		if(createdBoard != null) {
+//			return ResponseEntity.ok(createdBoard);
+//		} else {
+//			return ResponseEntity.badRequest().body("보드 생성에 실패했습니다.");
+//		}
+//	}
+	
+	//ObjectMapper 이용
+	//ObjectMapper mapper = new ObjectMapper();
+	//1.Java 객체를 Json으로변환하려면 
+//	Board board = new Board();
+//	String jsonString = mapper.writeValueAsString(board);
+	
+	//2.JSON을 Java 객체로 변환하려면
+//	String jsonString = "{...}"; // 여기에는 실제 JSON 문자열이 들어가야 합니다.
+//	Board board = mapper.readValue(jsonString, Board.class);
+
+
+	
+	//리액트에서 나에게 보내줄때 "board"라는 키로 안에 title이랑 content를 넣어서 보내줬다.
+	//"board"는 json 형태로 body(본문)에 넣어보내는 정보의 키다. body의 타입을 multipart/form-data 이걸로 지정해줬다.
+	//post나 put은 HTTP 요청을 body에 정보를 담아 보내는것이다.
 	@PostMapping(value = "/create/{stationcode}", consumes = "multipart/form-data")
 	public Board create(@PathVariable int stationcode, @RequestHeader("Authorization") String authorizationHeader,
 			@RequestParam(value = "image", required = false) MultipartFile image,
 			@RequestParam("board") String boardStr) throws JsonMappingException, JsonProcessingException {
-		ObjectMapper mapper = new ObjectMapper();
+		ObjectMapper mapper = new ObjectMapper(); //java 객체를 json으로 혹은 json을 java 객체로 변환하는 클래스.
 		Board board = mapper.readValue(boardStr, Board.class);
+		//문자열 json 형태의 문자열 boardStr을 Board 클래스의 인스턴스로 변환
 		return boardService.create(stationcode, authorizationHeader, board, image);
 	}
 	

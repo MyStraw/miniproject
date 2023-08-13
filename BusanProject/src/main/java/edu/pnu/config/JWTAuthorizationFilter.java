@@ -1,34 +1,32 @@
-package edu.pnu.config.auth;
+package edu.pnu.config;
 
 import java.io.IOException;
 import java.util.Optional;
 
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 
-import edu.pnu.domain.Member;
-import edu.pnu.persistence.MemberRepository;
+import edu.pnu.entity.Busanuser;
+import edu.pnu.repository.BusanUserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 
-public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
+@RequiredArgsConstructor
+public class JWTAuthorizationFilter extends OncePerRequestFilter {
+	
+	private final BusanUserRepository busanUserRepository;
 
-	private MemberRepository memRepo;
-
-	public JWTAuthorizationFilter(AuthenticationManager authenticationManager, MemberRepository memRepo) {
-		super(authenticationManager);
-		this.memRepo = memRepo;
-	}
-
+	private final String secretKey;
+	
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
@@ -40,19 +38,36 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 
 		//누군지 해석
 		String jwtToken = srcToken.replace("Bearer ", "");
-		String username = JWT.require(Algorithm.HMAC256("edu.pnu.jwtkey")).build().verify(jwtToken).getClaim("username")
+		String username = JWT.require(Algorithm.HMAC256(secretKey)).build().verify(jwtToken).getClaim("username")
 				.asString();
-		Optional<Member> opt = memRepo.findById(username);
+		Optional<Busanuser> opt = busanUserRepository.findById(username);
 		if (!opt.isPresent()) {
 			chain.doFilter(request, response);
 			return;
 		}
 
-		Member findmember = opt.get();
-		User user = new User(findmember.getUsername(), findmember.getPassword(), findmember.getAuthorities());
-		// Authentication 객체 생성, 암호는 필요없음
+		Busanuser busanuser = opt.get();
+		User user = new User(busanuser.getUsername(), busanuser.getPassword(), busanuser.getAuthorities());
 		Authentication auth = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
 		SecurityContextHolder.getContext().setAuthentication(auth);
 		chain.doFilter(request, response);
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

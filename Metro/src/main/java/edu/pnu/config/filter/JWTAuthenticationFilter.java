@@ -31,12 +31,13 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 //Lombok 어노테이션으로 final 또는 @NonNull 필드만을 사용하여 생성자를 자동으로 생성. 
 //여기서는 AuthenticationManager와 MemberRepository를 주입받기 위해 사용됩니다.
-public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter { //상속받은걸 잘 봐봐. /login요청 처리가 들어있다.
 
 	private final AuthenticationManager authenticationManager; // 스프링 시큐리티의 인증 메커니즘
 	private final MemberRepository memRepo;
 
-	@Override //로그인 요청 처리, 사용자 정보 추출하고 해당 정보로 인증시도
+	// post(/login) 이 엔드포인트는 스프링 시큐리티가 기본적으로 제공한다. UsernamePasswordAuthenticationFilter 이걸위해.
+	@Override //로그인 요청 처리, 사용자 정보 추출하고 해당 정보로 인증시도. /login 요청이 있을때 이게 호출돼 실행.
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
 			throws AuthenticationException {
 		ObjectMapper om = new ObjectMapper();
@@ -62,7 +63,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		return null;
 	}
 
-	@Override //인증 성공시 호출되는 메서드. 성공후 JWT 토큰생성하고 응답헤더에 추가.
+	@Override //위 메소드 인증 성공시 호출되는 메서드. 성공후 JWT 토큰생성하고 응답헤더에 추가.
 	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
 			Authentication authResult) throws IOException, ServletException {
 		//위에서 로그인 성공했을때 auth가 리턴 됐잖아? 그게 authResult이다.
@@ -89,7 +90,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		response.getWriter().write("{\"message\":\"로그인 성공\"}");		
 		response.getWriter().flush(); // 출력 스트림 플러시
 		response.getWriter().close(); // 출력 스트림 종료
-//		chain.doFilter(request, response);
+//		chain.doFilter(request, response); //이게 존재한다면 JWTAuthorizationFilter 이게 무조건 실행.
 
 	}
 }

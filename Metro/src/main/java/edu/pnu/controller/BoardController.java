@@ -128,17 +128,25 @@ public class BoardController {
 
 	// ------------------좋아요 부분--------------------//
 
-	@GetMapping("{id}/like")
+	@GetMapping("{id}/like") //Principal 보안관련 인터페이스. 현재 사용자의 인증정보 및 세부정보 나타냄.
+	//인증거친후 Authentication 객체가 생성되고 이게 Principal을 구현하고 있다. 여기서 Principal 파라미터를 사용하는건
+	//Authentication 객체를 자동으로 주입한다는것.
 	public ResponseEntity<Void> toggleLike(@PathVariable Integer id, Principal principal) {
 		likeService.toggleLike(principal.getName(), id);
-		return ResponseEntity.ok().build();
-	}
+		return ResponseEntity.ok().build(); //HTTP 응답을 생성하고 반환. ResponseEntity:HTTP 응답 나타내는 클래스.
+	} // ok는 상태코드 200(ok)를 나타내는 ResponseEntity를 반환하는 메소드. 404는 not found.
+	//build()는 생성된 정보를 바탕으로 ResponseEntit객체를 생성하는 메소드.
 
+	
+	//Optional : java8부터 나온 컨테이너 객체. 값이 있을수도 있고 없을수도 있는 상황을 대응하기 위해 사용됨.
+	//반환값이 null이 될수도 있는 상황에서 null 참조를 피하고자 할때 유용하게 사용된다.
+	//기존엔 null일땐 예외처리를 직접 해줬지만, 이걸 사용하면 null검사와 예외처리를 더 체계적으로 가능.
 	@GetMapping("{id}/checkliked")
 	public ResponseEntity<Boolean> hasUserLikedTheBoard(@PathVariable Integer id, Principal principal) {
 	    // 현재 로그인한 사용자 정보를 가져옵니다.
 	    Optional<Member> optionalMember = memberRepo.findByUsername(principal.getName());
-	    if (!optionalMember.isPresent()) {
+	    //해당 사용자 이름을 가진 Member 객체가 존재할수도, 존재하지 않을수도.
+	    if (!optionalMember.isPresent()) { //컨테이너값 존재하면 true, 아니면 false.
 	        // 에러 처리 로직 (예: 예외 던지기)
 	    }
 	    Member currentMember = optionalMember.get();

@@ -44,10 +44,10 @@ public class SecurityConfig {
 		return source; //설정된 UrlBasedCorsConfigurationSource 객체를 반환. 이 반환 값은 Spring Security의 CORS 필터에서 사용.
 	}
 
-	@Autowired //스프링 컨테이너로부터 자동 주입. 인증 설정 담당.
+	@Autowired //스프링 시큐리티 내부 설정에 이미 자동으로 컨테이너에 빈 등록되어있다. 컨테이너로부터 자동 주입. 인증 설정 담당.
 	private AuthenticationConfiguration authConfig;
 
-	@Autowired
+	@Autowired //JPA레파지토리 인터페이스 따르는 애들은 자동으로 빈에 주입되어 있고 그걸 쓴다.
 	private MemberRepository memberRepo;
 
 //	@SuppressWarnings("removal")
@@ -80,6 +80,7 @@ public class SecurityConfig {
 		http.formLogin(frmLogin -> frmLogin.disable()); //폼 로그인 기반 비활성화
 		http.sessionManagement(ssmg -> ssmg.sessionCreationPolicy(SessionCreationPolicy.STATELESS)); //세션 없애기. jwt 할거.
 		http.addFilter(new JWTAuthenticationFilter(authConfig.getAuthenticationManager(), memberRepo)); //인증검사
+		//로그인 시도. 즉 /login 으로 요청이 있을때 이 필터안의 attemptAuthentication가 호출됨. 로그인 시도가 없다면 이 필터 안에서 아무것도 실행안함. 그냥 "통과"
 		http.addFilter(new JWTAuthorizationFilter(authConfig.getAuthenticationManager(), memberRepo)); //권한검사
 		//인증을 먼저 하고 그다음 권한을 봐야지 순서대로. 
 		return http.build();

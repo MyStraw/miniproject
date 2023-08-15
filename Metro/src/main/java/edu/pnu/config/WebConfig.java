@@ -1,19 +1,14 @@
 package edu.pnu.config;
 
-import java.util.Arrays;
-
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 
-@Configuration
+//@Configuration
 //@EnableWebSecurity
 
-public class WebConfig implements WebMvcConfigurer {
+//public class WebConfig implements WebMvcConfigurer {
 //    @Override
 //    public void addCorsMappings(CorsRegistry registry) { //이걸 해줌으로서 cors disabled 안써도 된다. 이거 소용없어짐.
 //        registry.addMapping("/**") 
@@ -35,4 +30,4 @@ public class WebConfig implements WebMvcConfigurer {
 //        source.registerCorsConfiguration("/**", configuration);
 //        return source;
 //    }
-}
+//}

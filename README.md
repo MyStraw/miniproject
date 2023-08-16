@@ -40,7 +40,18 @@ git clone https://github.com/MyStraw/miniproject
 - 내가 쓴글 및 내가 좋아요 눌린 글 모아보기  
 
 ## 화면 구성  
-| First Header | Second Header |
-| ------------ | ------------- |
-| Content Cell | Content Cell  |
-| Content Cell | Content Cell  |
+| 노선도 |
+| ------------ | 
+| <img src=img/1.png> |
+
+| 역정보 및 게시판 |
+| ------------ | 
+| <img src=img/2.png> |
+
+| 편의시설 정보 |
+| ------------ | 
+| <img src=img/3.png> |
+
+| 회원정보 |
+| ------------ | 
+| <img src=img/4.png> |

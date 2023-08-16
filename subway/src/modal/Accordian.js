@@ -37,7 +37,10 @@ const LikeButton = ({ id, likesCount }) => {
     }
 
     if (likeStatus === null) {
-        return null;
+        return <span>
+            <FiHeart style={{ width: '2rem', display: 'inline-block', color: '#9933ff' }} />
+            <span>{count}</span>
+        </span>;
     }
 
     return (

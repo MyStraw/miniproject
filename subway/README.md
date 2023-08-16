@@ -10,3 +10,8 @@
 - 게시판(이미지 첨부 가능)
 - <strong>승강장 정보</strong>(지상/지하 층, 승강장 연결)
 - <strong>편의시설 정보</strong>
+
+<img src='img/main.png'>
+<img src='img/info1.png'>
+<img src='img/info2.png'>
+<img src='img/user.png' style='width: 360px;'>

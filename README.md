@@ -1,6 +1,13 @@
 # 부산 지하철 이용정보 미니 프로젝트
-부산대학교 K-digital 3기  
-개발기간: 2023.07.24 ~ 2023.08.16
+#### 부산대학교 K-digital 3기  
+#### 개발기간: 2023.07.24 ~ 2023.08.16
+#### 데이터출처  
+- https://www.data.go.kr/data/15054957/fileData.do [노선도 이미지]  
+- https://www.data.go.kr/data/15082980/fileData.do [운행정보]
+- https://www.data.go.kr/data/15050408/fileData.do [역정보]
+- https://www.data.go.kr/data/15052664/fileData.do [편의시설]
+- https://www.data.go.kr/data/15041171/fileData.do [승강장정보]
+
 
 ## 프로젝트 구성
 프론트엔드 : https://github.com/fabbitox/subway  

@@ -31,7 +31,7 @@ CREATE TABLE `likes` (
   KEY `FKnhtl4nomqixqaa74g0goqnfun` (`member_username`),
   CONSTRAINT `FK5cq36196j3ww17d7r95qdm4td` FOREIGN KEY (`board_id`) REFERENCES `board` (`id`),
   CONSTRAINT `FKnhtl4nomqixqaa74g0goqnfun` FOREIGN KEY (`member_username`) REFERENCES `member` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=96 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=97 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -53,4 +53,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-08-16 10:38:00
+-- Dump completed on 2023-08-16 18:02:27

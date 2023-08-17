@@ -21,6 +21,11 @@
 ~~~
 git clone https://github.com/MyStraw/miniproject
 ~~~
+
+#### application.properties
+MySQL을 이용
+ID와 password 등을 알맞게 수정
+
 #### DB 구성
 - 레파지토리 내 DB 폴더의 최신 날짜 폴더안의 .sql 파일 MySQL에서 불러오기후 실행
 - uploads 폴더를 c:\Temp\uploads 경로에 배치

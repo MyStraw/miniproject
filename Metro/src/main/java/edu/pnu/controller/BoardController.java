@@ -29,22 +29,24 @@ import edu.pnu.persistence.BoardRepository;
 import edu.pnu.persistence.MemberRepository;
 import edu.pnu.service.BoardService;
 import edu.pnu.service.LikeService;
+import lombok.RequiredArgsConstructor;
 
 @RestController
+@RequiredArgsConstructor //이걸 이용해서 생성자 주입
 @RequestMapping("/board")
 public class BoardController {
 
-	@Autowired
-	private BoardService boardService;
+	//@Autowired 필드주입을 하지말고 생성자 주입을 해. 
+	private final BoardService boardService;
 
-	@Autowired
-	private LikeService likeService;
+	//@Autowired
+	private final LikeService likeService;
 	
-	@Autowired
-	private MemberRepository memberRepo;
+	//@Autowired
+	private final MemberRepository memberRepo;
 	
-	@Autowired
-	private BoardRepository boardRepo;
+	//@Autowired
+	private final BoardRepository boardRepo;
 
 	// @PostMapping("/create/{stationcode}")
 	// 이미지랑 같이 보내려면 multipart/form-data를 써야한다. 프론트에서도.

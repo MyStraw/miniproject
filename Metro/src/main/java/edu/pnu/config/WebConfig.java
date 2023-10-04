@@ -14,6 +14,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 //        registry.addMapping("/**") 
 //                .allowedOrigins("http://localhost:3000")
 //                .allowedMethods("OPTIONS", "GET", "POST", "PUT", "DELETE");
+				
 //    }
     
 //    @Bean //0807 추가. 프론트에서 로그인.

@@ -19,7 +19,7 @@ import edu.pnu.domain.Board;
 import edu.pnu.domain.Member;
 
 @Repository
-public class JdbcBoardRepository {
+public class JdbcBoardRepository { //인터페이스 만들어서 하셈. 원래 JPA 상속받던 인터페이스로 가능?
 
 	private static final String DB_URL = "jdbc:mysql://localhost:3306/metro";
 	private static final String DB_USER = "metro";

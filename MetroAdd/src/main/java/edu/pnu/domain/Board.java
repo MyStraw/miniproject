@@ -37,6 +37,7 @@ public class Board {
 
 	private Integer id;
 	private String title;
+	
 	private String content;
 
 	private String author;

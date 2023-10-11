@@ -11,7 +11,7 @@ import javax.validation.Payload;
 @Target({ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Saisai {
-    String message() default "The value should be between 1 and 500";
+    String message() default "사이 값을 입력하세요. min = , max = ";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
     int min();

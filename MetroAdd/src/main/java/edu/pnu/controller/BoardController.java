@@ -132,5 +132,16 @@ public class BoardController implements BoardControllerInterface {
 	    model.addAttribute("board", board.orElse(null));
 	    return "boardView";
 	}
+	// BoardController.java
+	// ...
+
+	// 새로운 컨트롤러 메소드
+	@GetMapping("/view")
+	public String viewBoardById(@RequestParam Integer id, Model model) {
+	  Optional<Board> board = boardService.find(id);
+	  model.addAttribute("board", board.orElse(null));
+	  return "boardView";
+	}
+
 
 }

@@ -1,11 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="EUC-KR">
+<meta charset="UTF-8">
 <title>Board</title>
 </head>
 <body>
-  <h1>Board Information</h1>
+  <h1>게시글</h1>
+    <form action="/board/view" method="get">
+    <label for="id">게시글 ID 입력: </label>
+    <input type="number" id="id" name="id">
+    <button type="submit">Search</button>
+  </form>
     <ul>
         <li>ID: <span th:text="${board.id}"></span></li>
         <li>Title: <span th:text="${board.title}"></span></li>

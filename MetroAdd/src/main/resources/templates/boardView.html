@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="EUC-KR">
+<title>Board</title>
+</head>
+<body>
+  <h1>Board Information</h1>
+    <ul>
+        <li>ID: <span th:text="${board.id}"></span></li>
+        <li>Title: <span th:text="${board.title}"></span></li>
+        <li>Content: <span th:text="${board.content}"></span></li>
+        <li>Author: <span th:text="${board.author}"></span></li>
+        <li>Station Code: <span th:text="${board.stationcode}"></span></li>
+        <li>Likes Count: <span th:text="${board.likesCount}"></span></li>
+    </ul>
+</body>
+</html>

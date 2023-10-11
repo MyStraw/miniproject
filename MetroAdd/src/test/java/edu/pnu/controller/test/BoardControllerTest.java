@@ -8,8 +8,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.validation.annotation.Validated;
 
 import edu.pnu.service.BoardService;
+
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -91,4 +93,35 @@ public class BoardControllerTest {
 //	    mockMvc.perform(MockMvcRequestBuilders.delete("/board/delete/{id}", 1))
 //	        .andExpect(MockMvcResultMatchers.status().isOk());
 //	}
+	
+	@Test //min 1, max 500으로 해놨다. stationcode를. 0으로 주면 어떤일 벌어지냐
+	public void listStationCodeTest_InvalidCase1() throws Exception {
+	    mockMvc.perform(MockMvcRequestBuilders.get("/board/list/{stationcode}", 0))
+	        .andExpect(MockMvcResultMatchers.status().isBadRequest()); // 400 에러가 뜬다
+	}
+	
+	@Test //이건 500 넘긴 숫자로. 
+	public void listStationCodeTest_InvalidCase2() throws Exception {
+	    mockMvc.perform(MockMvcRequestBuilders.get("/board/list/{stationcode}", 501))
+	        .andExpect(MockMvcResultMatchers.status().isBadRequest()); 
+	}
+	
+//	400 Bad Request
+//	- 요청이 서버로 제대로 전달되지 않았을 때 발생
+//	- 클라이언트측 요청이 잘못된 문법이거나, 빠진 필수 정보 등으로 인해 서버가 요청을 이해할수 없을때 이 에러가 반환.
+	
+//	401 Unauthorized
+//	- 인증이 필요한 자원에 대해 인증하지 않고 요청을 했을 때 발생.
+//	- 일반적으로 이 에러 코드는 유효한 자격 증명이 없는 경우에 생긴다.
+	
+//	402 Payment Required - 이건 아직?? 
+	
+//	403 Forbidden
+//	- 서버가 요청을 이해는 했지만, 해당 요청을 실행할 권한이 없을 때 발생.
+//	- 401과 다르게, 클라이언트의 자격 증명이 있더라도 접근이 금지된 리소스를 요청했을때 발생.
+	
+//	404 Not Found
+//	- 요청한 리소스가 서버에 없을 때 반생하는 에러.
+//	- URL이 잘못되었거나, 해당 리소스가 삭제되었을 때 일반적으로 발생.	
+	
 }
